@@ -1,5 +1,7 @@
 package com.example.bookshop.catalog.demo;
 
+import java.util.List;
+
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
@@ -18,11 +20,10 @@ public class BookDataLoader {
 
     @EventListener(ApplicationReadyEvent.class)
     public void loadBookTestData(){
-        var book1 = new Book("1234567890", "Machine Learning Bootstrap", "John Doe", 18.99);
-        var book2 = new Book("2345678901", "Java for all", "Alice Baker", 12.99);
-        var book3 = new Book("3456789012", "Spring in Action", "Eve Carpenter", 24.99);
-        bookRepository.save(book1);
-        bookRepository.save(book2);
-        bookRepository.save(book3);
-    }
+        bookRepository.deleteAll();
+        var book1 = Book.of("1234567890", "Machine Learning Bootstrap", "John Doe", 18.99);
+        var book2 = Book.of("2345678901", "Java for all", "Alice Baker", 12.99);
+        var book3 = Book.of("3456789012", "Spring in Action", "Eve Carpenter", 24.99);
+   
+        bookRepository.saveAll(List.of(book1, book2, book3));}
 }

@@ -1,11 +1,20 @@
 package com.example.bookshop.catalog.domain;
 
+import java.time.Instant;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 
 public record Book(
+    @Id
+    Long id,
 
     @NotBlank(message = "ISBN is required")
     @Pattern(regexp = "^([0-9]{10}|[0-9]{13})$", message = "ISBN must be 10 or 13 digits")
@@ -19,5 +28,18 @@ public record Book(
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be greater than zero")
-    Double price
-){}
+    Double price,
+
+    @CreatedDate
+    Instant createdDate,
+
+    @LastModifiedDate
+    Instant lastModifiedDate,
+
+    @Version
+    int version){
+
+    public static Book of(String isbn, String title, String author, Double price) {
+        return new Book(null, isbn, title, author, price, null, null, 0);
+    }
+}

@@ -23,6 +23,16 @@ spring:
         max-interval: 2000
         max-attempts: 6
         multiplier: 1.1
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dbs_catalog
+    username: user
+    password: secret
+    hikari:
+      connection-timeout: 2000
+      maximum-pool-size: 5
+  sql:
+    init:
+      mode: always
 
 management:
   endpoints:
