@@ -24,7 +24,7 @@ class CatalogApplicationTests {
 
 	@Test
 	void whenPostRequestThenBookCreated() {
-		var expectedBook = Book.of("9783161484100", "The Catcher in the Rye", "J.D. Salinger", 8.99);
+		var expectedBook = Book.of("9783161484100", "The Catcher in the Rye", "J.D. Salinger", 8.99, null);
 		webTestClient.post().uri("/books")
 				.bodyValue(expectedBook)
 				.exchange()
@@ -35,6 +35,7 @@ class CatalogApplicationTests {
 					assertThat(actualBook.title()).isEqualTo(expectedBook.title());
 					assertThat(actualBook.author()).isEqualTo(expectedBook.author());
 					assertThat(actualBook.price()).isEqualTo(expectedBook.price());
+					assertThat(actualBook.publisher()).isEqualTo(expectedBook.publisher());	
 				});
 	}
 
@@ -42,7 +43,7 @@ class CatalogApplicationTests {
 	@Test
 	void whenGetRequestWithIdThenBookReturned(){
 		var isbn = "9783161484101";
-		var bookToCreate = Book.of(isbn, "The Catcher in the Rye", "J.D. Salinger", 8.99);
+		var bookToCreate = Book.of(isbn, "The Catcher in the Rye", "J.D. Salinger", 8.99,"Publisher");
 		Book expectedBook = webTestClient.post().uri("/books")
 				.bodyValue(bookToCreate)
 				.exchange()
@@ -57,6 +58,7 @@ class CatalogApplicationTests {
 					assertThat(book.title()).isEqualTo(expectedBook.title());
 					assertThat(book.author()).isEqualTo(expectedBook.author());
 					assertThat(book.price()).isEqualTo(expectedBook.price());
+					assertThat(book.publisher()).isEqualTo(expectedBook.publisher());
 				});
 	}
 
@@ -71,14 +73,14 @@ class CatalogApplicationTests {
 	@Test
 	void whenPutRequestThenBookUpdated(){
 		String isbn = "9783161484103";
-		Book bookToCreate = Book.of(isbn, "The Catcher in the Rye", "J.D. Salinger", 8.99);
+		Book bookToCreate = Book.of(isbn, "The Catcher in the Rye", "J.D. Salinger", 8.99,"");
 		Book expectedBook = webTestClient.post().uri("/books")
 				.bodyValue(bookToCreate)
 				.exchange()
 				.expectStatus().isCreated()
 				.expectBody(Book.class).value(book -> assertThat(book).isNotNull())
 				.returnResult().getResponseBody();
-		Book bookToUpdate = Book.of(isbn, "The Catcher in the Rye", "J.D. Salinger", 9.99);
+		Book bookToUpdate = Book.of(isbn, "The Catcher in the Rye", "J.D. Salinger", 9.99, "");
 		webTestClient.put().uri("/books/{isbn}", isbn)
 				.bodyValue(bookToUpdate)
 				.exchange().expectStatus().is2xxSuccessful()
@@ -88,13 +90,14 @@ class CatalogApplicationTests {
 					assertThat(book.title()).isEqualTo(expectedBook.title());
 					assertThat(book.author()).isEqualTo(expectedBook.author());
 					assertThat(book.price()).isEqualTo(bookToUpdate.price());
+					assertThat(book.publisher()).isEqualTo(expectedBook.publisher());
 				});
 	}
 
 	@Test
 	void whenDeleteRequestThenBookDeleted(){
 		String isbn = "9783161484104";
-		Book bookToCreate = Book.of(isbn, "The Catcher in the Rye", "J.D. Salinger", 8.99);
+		Book bookToCreate = Book.of(isbn, "The Catcher in the Rye", "J.D. Salinger", 8.99, null);
 		webTestClient.post().uri("/books")
 				.bodyValue(bookToCreate)
 				.exchange()
