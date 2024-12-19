@@ -2,6 +2,7 @@ version: "3"
 services:
   catalog:
     build: .
+    image: catalog
     depends_on:
       - postgres
     ports:
