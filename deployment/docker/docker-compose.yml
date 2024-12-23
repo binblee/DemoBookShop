@@ -30,4 +30,12 @@ services:
       - POSTGRES_PASSWORD=secret
     volumes:
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+  edge-service:
+    build: ../../edge-service
+    image: edge-service
+    ports:
+      - "9000:9000"
+    environment:
+      - CATALOG_SERVICE_URL=http://catalog:9001
+      - ORDER_SERVICE_URL=http://order:9002
 
