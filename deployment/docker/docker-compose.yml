@@ -21,6 +21,14 @@ services:
       - SPRING_R2DBC_URL=r2dbc:postgresql://postgres:5432/dbs_order
       - SPRING_FLYWAY_URL=jdbc:postgresql://postgres:5432/dbs_order
       - DEMOBOOKSHOP_CATALOG_SERVICE_URI=http://catalog:9001
+  edge-service:
+    build: ../../edge-service
+    image: edge-service
+    ports:
+      - "9000:9000"
+    environment:
+      - CATALOG_SERVICE_URL=http://catalog:9001
+      - ORDER_SERVICE_URL=http://order:9002
   postgres:
     image: postgres:14.4
     ports:
@@ -30,12 +38,7 @@ services:
       - POSTGRES_PASSWORD=secret
     volumes:
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
-  edge-service:
-    build: ../../edge-service
-    image: edge-service
+  redis:
+    image: "redis:7.4.1"
     ports:
-      - "9000:9000"
-    environment:
-      - CATALOG_SERVICE_URL=http://catalog:9001
-      - ORDER_SERVICE_URL=http://order:9002
-
+      - 6379:6379
