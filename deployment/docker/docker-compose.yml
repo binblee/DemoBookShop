@@ -15,20 +15,34 @@ services:
     image: order
     depends_on:
       - postgres
+      - rabbitmq
     ports:
       - "9002:9002"
     environment:
       - SPRING_R2DBC_URL=r2dbc:postgresql://postgres:5432/dbs_order
       - SPRING_FLYWAY_URL=jdbc:postgresql://postgres:5432/dbs_order
       - DEMOBOOKSHOP_CATALOG_SERVICE_URI=http://catalog:9001
+      - SPRING_RABBITMQ_HOST=rabbitmq
+  dispatcher:
+    build: ../../dispatcher
+    image: "dispatcher"
+    depends_on:
+      - rabbitmq
+    ports:
+      - 9003:9003
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
   edge-service:
     build: ../../edge-service
     image: edge-service
+    depends_on:
+      - redis
     ports:
       - "9000:9000"
     environment:
       - CATALOG_SERVICE_URL=http://catalog:9001
       - ORDER_SERVICE_URL=http://order:9002
+      - SPRING_REDIS_HOST=redis
   postgres:
     image: postgres:14.4
     ports:
