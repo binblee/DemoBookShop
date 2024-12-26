@@ -44,6 +44,15 @@ services:
       - ORDER_SERVICE_URL=http://order:9002
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://host.docker.internal:8080/realms/DemoBookShop
+      - SPA_URL=http://polar-ui:9004
+
+  polar-ui:
+    image: "ghcr.io/polarbookshop/polar-ui:v1"
+    container_name: "polar-ui"
+    ports:
+      - 9004:9004
+    environment:
+      - PORT=9004
 
   postgres:
     image: postgres:14.4
