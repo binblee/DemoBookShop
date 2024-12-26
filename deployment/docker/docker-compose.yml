@@ -42,7 +42,9 @@ services:
     environment:
       - CATALOG_SERVICE_URL=http://catalog:9001
       - ORDER_SERVICE_URL=http://order:9002
-      - SPRING_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://host.docker.internal:8080/realms/DemoBookShop
+
   postgres:
     image: postgres:14.4
     ports:
@@ -63,5 +65,15 @@ services:
       - 15672:15672
     volumes:
       - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev --import-realm
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=user
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=secret
+    ports:
+      - 8080:8080
+    volumes:
+        - ./keycloak:/opt/keycloak/data/import
 
 

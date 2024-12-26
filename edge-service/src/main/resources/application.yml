@@ -61,6 +61,18 @@ spring:
             - name: CircuitBreaker
               args:
                 name: orderCircuitBreaker
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: edge-service
+            client-secret: secret
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/DemoBookShop
+
 resilience4j:
   circuitbreaker:
     configs:
